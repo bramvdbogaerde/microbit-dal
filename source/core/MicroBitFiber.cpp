@@ -514,6 +514,24 @@ int invoke(void (*entry_fn)(void))
      return MICROBIT_OK;
 }
 
+/**                                                                                                                           
+ * Externally kill a fiber                                                                                                    
+ */                                                                                                                           
+void kill_fiber(Fiber* fiber){                                                                                                
+   if(!fiber_scheduler_running())                                                                                             
+      return;                                                                                                                 
+                                                                                                                              
+   // remove the fiber from whetever queue it was on                                                                          
+   dequeue_fiber(fiber);                                                                                                      
+                                                                                                                              
+   // add it to the queue so it can be recycled                                                                               
+   queue_fiber(fiber, &fiberPool);                                                                                            
+                                                                                                                              
+   // schedule a new fiber, in case the user passed us the fiber                                                              
+   // that was currently running. In that case a new fiber must be selected.                                                  
+   schedule();                                                                                                                
+} 
+
 /**
   * Executes the given function asynchronously if necessary, and offers the ability to provide a parameter.
   *

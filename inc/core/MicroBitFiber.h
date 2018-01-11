@@ -119,6 +119,13 @@ int fiber_scheduler_running();
 void release_fiber(void);
 void release_fiber(void *param);
 
+/**                                                                                                                           
+ * Externally kill a Fiber                                                                                                    
+ *                                                                                                                            
+ * @param fiber the fiber that must be killed                                                                                 
+ */                                                                                                                           
+void kill_fiber(Fiber* fiber);  
+
 /**
  * Launches a fiber.
  *
